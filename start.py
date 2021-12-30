@@ -4,9 +4,10 @@ from tkinter import ttk
 from PIL import ImageTk
 import PIL.Image
 import cv2 as cv
-from main_page1 import *
+from searchpage import *
+from mypage import *
 
-path = 'C:/Users/user/Documents/2021-2학기/데이터베이스관리2_가야나다라잔/팀프로젝트/final/PBL/'
+path = 'C:/Users/user/Documents/2021-2학기/데이터베이스관리2_가야나다라잔/팀프로젝트/final/PBL/src/'
 window = Tk()
 
 window.title("Show")
@@ -51,7 +52,7 @@ frm.place(relx=.5, rely=.5, anchor=CENTER)
 lbl1 = Label(frm)
 lbl1.grid()
 
-cap = cv.VideoCapture('netflix_intro.mp4')
+cap = cv.VideoCapture(path+'netflix_intro.mp4')
 
 def video_play():
     ret, frame = cap.read()
