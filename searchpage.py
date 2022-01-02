@@ -13,7 +13,7 @@ def view():
     #### GUI ####
     window = Tk()
     window.title("Search shows")
-    window.geometry("1280x720")
+    window.geometry("1920x1080")
 
     frame1 = Frame(window, bg="#60b8eb")
     frame1.place(relx=0, rely=0, relwidth=0.24, relheight=1)
@@ -41,13 +41,13 @@ def view():
             widget.destroy()
 
     # choose show type
-    Label(frame1, text='Type', bg="#60b8eb").place(relx=0.05, rely=0.25, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Type', bg="#60b8eb").place(relx=0.05, rely=0.15, relheight=0.05, relwidth=0.2, anchor=NW)
     option2 = StringVar(frame1)
     option2.set("ALL")
     op2list = ["ALL", "movie", "tv"]
     o2 = OptionMenu(frame1, option2, *op2list)
     o2.config(fg="#000000",bg="#ffffff")
-    o2.place(relx=0.25, rely=0.25, relheight=0.05, relwidth=0.7, anchor=NW)
+    o2.place(relx=0.25, rely=0.15, relheight=0.05, relwidth=0.7, anchor=NW)
     
 
     # choose searching theme <title, director, cast>
@@ -56,14 +56,14 @@ def view():
     oplist = ["Title", "Director", "Cast"]
     o = OptionMenu(frame1, option,"Title", "Director", "Cast")
     o.config(fg="#000000",bg="#ffffff")
-    o.place(relx=0.25, rely=0.35, relheight=0.05, relwidth=0.7, anchor=NW)
-    Label(frame1, text=option.get(), bg="#60b8eb").place(relx=0.05, rely=0.35, relheight=0.05, relwidth=0.2, anchor=NW)
+    o.place(relx=0.25, rely=0.25, relheight=0.05, relwidth=0.7, anchor=NW)
+    Label(frame1, text=option.get(), bg="#60b8eb").place(relx=0.05, rely=0.25, relheight=0.05, relwidth=0.2, anchor=NW)
 
 
 
-    Label(frame1, text='Keyword', bg="#60b8eb").place(relx=0.05, rely=0.45, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Keyword', bg="#60b8eb").place(relx=0.05, rely=0.35, relheight=0.05, relwidth=0.2, anchor=NW)
     e = Entry(frame1, fg='black', bg='white')
-    e.place(relx=0.25, rely=0.45, relheight=0.05, relwidth=0.7, anchor=NW)
+    e.place(relx=0.25, rely=0.35, relheight=0.05, relwidth=0.7, anchor=NW)
     
     global optionGenre, optionDirector
 
@@ -78,15 +78,15 @@ def view():
     odlist=['ALL']
 
     global od, og
-    Label(frame1, text='Country', bg="#60b8eb").place(relx=0.05, rely=0.65, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Country', bg="#60b8eb").place(relx=0.05, rely=0.6, relheight=0.05, relwidth=0.2, anchor=NW)
     od = OptionMenu(frame1, optionDirector, *odlist)
     od.config(foreground="black",background="white")
-    od.place(relx=0.25, rely=0.65, relheight=0.05, relwidth=0.7, anchor=NW)
+    od.place(relx=0.25, rely=0.6, relheight=0.05, relwidth=0.7, anchor=NW)
 
-    Label(frame1, text='Genre', bg="#60b8eb").place(relx=0.05, rely=0.75, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Genre', bg="#60b8eb").place(relx=0.05, rely=0.7, relheight=0.05, relwidth=0.2, anchor=NW)
     og = OptionMenu(frame1, optionGenre, *oglist)
     og.config(foreground="black",background="white")
-    og.place(relx=0.25, rely=0.75, relheight=0.05, relwidth=0.7, anchor=NW)
+    og.place(relx=0.25, rely=0.7, relheight=0.05, relwidth=0.7, anchor=NW)
 
     def search():
         close_display()
@@ -274,7 +274,7 @@ def view():
         k = 1
         for cols in columns:
             res_label = Label(scrollable_frame, text=cols, bg="#000000", fg="#ffffff")
-            res_label['font'] = font.Font(family="Roboto", size=10, weight='bold')
+            res_label['font'] = font.Font(family="NanumBarunGothic", size=10, weight='bold')
             res_label.grid(row=0, column=k)
             k = k + 1
 
@@ -286,7 +286,7 @@ def view():
         result_index=0
         for ind,d in enumerate(show_ids):
             res_label2 = Button(scrollable_frame, text=result[result_index][1], bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=8, weight='bold')
+            res_label2['font'] = font.Font(family="NanumBarunGothic", size=8, weight='bold')
             res_label2.grid(row=ind+1, column=1, sticky=NSEW)
             res_label2.config(command=lambda e=ind: detail(e))
             btns[ind]=res_label2
@@ -296,7 +296,7 @@ def view():
         for res in result:
             for j in range(2,len(res)):
                 res_label2 = Label(scrollable_frame, text=res[j], bg="#000000", fg="white")
-                res_label2['font'] = font.Font(family="Roboto", size=8, weight='bold')
+                res_label2['font'] = font.Font(family="NanumBarunGothic", size=8, weight='bold')
                 res_label2.grid(row=i, column=j, sticky=NSEW)
 
                 if option2.get() == "ALL":
@@ -312,11 +312,11 @@ def view():
 
         od = OptionMenu(frame1, optionDirector, *odlist)
         od.config(fg="#000000",bg="#ffffff")
-        od.place(relx=0.25, rely=0.65, relheight=0.05, relwidth=0.7, anchor=NW)
+        od.place(relx=0.25, rely=0.6, relheight=0.05, relwidth=0.7, anchor=NW)
 
         og = OptionMenu(frame1, optionGenre, *oglist)
         og.config(fg="#000000",bg="#ffffff")
-        og.place(relx=0.25, rely=0.75, relheight=0.05, relwidth=0.7, anchor=NW)
+        og.place(relx=0.25, rely=0.7, relheight=0.05, relwidth=0.7, anchor=NW)
         pass
 
     def reset():
@@ -328,11 +328,11 @@ def view():
 
     button1 = Button(frame1, text="Search", command=search)
     button1.config( bg='white', fg='black')
-    button1.place(relx=0.05, rely=0.53, relheight=0.07, relwidth=0.4)
+    button1.place(relx=0.05, rely=0.45, relheight=0.07, relwidth=0.4)
 
     button2 = Button(frame1, text="Reset", command=reset)
     button2.config( bg='white', fg='black')
-    button2.place(relx=0.55, rely=0.53, relheight=0.07, relwidth=0.4)
+    button2.place(relx=0.55, rely=0.45, relheight=0.07, relwidth=0.4)
 
     ### detail page ###
 
@@ -462,19 +462,19 @@ def view():
         window_d.title('Show Detail')
         window_d.geometry('800x600')
         addframe = Frame(window_d, bg="black")
-        addframe.place(relwidth=0.3, relheight=0.1, relx=0.7, rely=0.9)
+        addframe.place(relwidth=0.4, relheight=0.1, relx=0.6, rely=0.9)
 
         movieframe = Frame(window_d, bg="#60b8eb")
-        movieframe.place(relwidth=.7, relheight=.9, relx=0, rely=0)
+        movieframe.place(relwidth=.6, relheight=.9, relx=0, rely=0)
 
         btnframe = Frame(window_d, bg="#60b8eb")
-        btnframe.place(relwidth=.7, relheight=.1, relx=0, rely=.9)
+        btnframe.place(relwidth=.6, relheight=.1, relx=0, rely=.9)
 
         addcomFrame = Frame(window_d, bg="#000000")
-        addcomFrame.place(relwidth=.3, relheight=.3, relx=.7, rely=0)
+        addcomFrame.place(relwidth=.4, relheight=.3, relx=.6, rely=0)
 
         commentframe = Frame(window_d, bg="#000000")
-        commentframe.place(relwidth=.3, relheight=.6, relx=0.7, rely=.3)
+        commentframe.place(relwidth=.4, relheight=.6, relx=0.6, rely=.3)
         commentgridframe = Frame(commentframe, bg="#000000")
         commentgridframe.place(relx=.5, rely=0, anchor=N)
 
@@ -495,9 +495,8 @@ def view():
 
         global result, columns
         result = getInfo()
-        columns = ["title", "date_added", "release_year", "rating", "duration", "description", "casts", "directors",
-                   "countries", "genres"
-                   ]
+        columns = ["Title", "Date_added", "Release_year", "Rating", "Duration", "Description", "Casts", "Directors",
+                   "Countries", "Genres"]
 
         def showresult(result):
             for i in infos.winfo_children():
@@ -523,12 +522,13 @@ def view():
             mydb.close()
 
             for i in myResult:
-                Label(commentgridframe, text=i[0], bg="#60b8eb").grid(row=myResult.index(i), column=0 )
-                Label(commentgridframe, text=i[1], bg="#60b8eb").grid(row=myResult.index(i), column=1, padx=3, pady=3, ipady=4)
+                Label(commentgridframe, text=i[0], fg="white",bg="black").grid(row=myResult.index(i), column=0 )
+                Label(commentgridframe, text=i[1], fg="white",bg="black").grid(row=myResult.index(i), column=1, padx=3, pady=3, ipady=4)
 
         showresult(result)
         bringComment()
-        likeBtn = Button(btnframe, text='Like')
+
+        likeBtn = Button(btnframe, text='Like', height=3, width=21)
         likeBtn.pack(side=LEFT, anchor=S)
 
         def remove():
@@ -577,18 +577,22 @@ def view():
             global window_e
             window_e = Tk()
             window_e.title('Edit show')
-            window_e.geometry('700x500')
+            window_e.geometry('650x500')
             frame = Frame(window_e,bg="black")
             frame.pack(side = LEFT, fill = BOTH, expand = 1)
 
             for i in columns:
-                Label(frame, text=i, fg="white",bg="black").grid(row=columns.index(i), column=0)
+                font2 = font.Font(family="NanumBarunGothic", weight="bold")
+                label1 = Label(frame, text=i, fg="white",bg="black")
+                label1.grid(row=columns.index(i), column=0)
+                label1.configure(font=font2)
+
                 e = Entry(frame, width=70, bg="white")
                 e.insert(END, str(result[columns.index(i)]))
                 e.grid(row=columns.index(i), column=1, padx=3, pady=5, ipady=7)
 
             saveBtn = Button(frame, text='Save change')
-            saveBtn.grid(row=10, column=1, sticky='e', )
+            saveBtn.grid(row=11, column=1, pady=3, sticky='s')
 
             def editSave():
                 if option.get() == 'Type':
@@ -702,13 +706,13 @@ def view():
             mydb.close()
 
         getlike()
-        likeBtn.config(command=like)
+        likeBtn.config( command=like)
 
-        editBtn = Button(btnframe, text='Edit')
+        editBtn = Button(btnframe, text='Edit', height=3, width=22)
         editBtn.pack(side=RIGHT, anchor=S)
         editBtn.config(command=edit)
 
-        removeBtn = Button(btnframe, text='Delete')
+        removeBtn = Button(btnframe, text='Delete', height=3, width=22)
         removeBtn.pack(side=RIGHT, anchor=S)
         removeBtn.config(command=remove)
 
@@ -746,21 +750,23 @@ def view():
         addBtn.config(command=addComment)
         window_d.mainloop()
 
-
     def add():
         global window_a
-        columns = ["title", "date_added", "release_year", "rating", "duration", "description", "casts", "directors",
-                   "countries", "genres"
+        columns = ["Title", "Date_added", "Release_year", "Rating", "Duration", "Description", "Casts", "Directors",
+                   "Countries", "Genres"
                    ]
         window_a = Tk()
         window_a.title('Add show')
-        window_a.geometry('700x500')
+        window_a.geometry('650x500')
+        
 
         frame = Frame(window_a, bg="black")
         frame.pack(side = LEFT, fill = BOTH, expand = 1)
+        font2=font.Font(family="NanumBarunGothic",weight="bold")
 
         tableNm = Label(frame, text='Type', fg="white", bg="black")
         tableNm.grid(row=0, column=0)
+        tableNm.configure(font=font2)
 
         option = StringVar(frame)
         option.set("Type")
@@ -768,17 +774,20 @@ def view():
         o3.grid(row=0, column=1)
 
         for i in columns:
-            Label(frame, text=i,fg="white", bg="black").grid(row=columns.index(i) + 1, column=0)
+            font2=font.Font(family="NanumBarunGothic",weight="bold")
+            label2 = Label(frame, text=i,fg="white", bg="black")
+            label2.grid(row=columns.index(i) + 1, column=0)
+            label2.configure(font=font2)
             e = Entry(frame, width=70)
             if (columns.index(i) > 5):
                 e.insert(END, "['']")
             else:
                 e.insert(END, '')
-
             e.grid(row=columns.index(i) + 1, column=1, padx=3, pady=5, ipady=7)
 
-        saveBtn = Button(frame, text='Save')
-        saveBtn.grid(row=11, column=1, sticky='e', )
+        saveBtn = Button(frame, text='Save',width=10)
+        saveBtn.grid(row=11, column=1)
+
 
         def editSave():
             if option.get() == 'Type':
@@ -869,6 +878,5 @@ def view():
         window_a.mainloop()
 
     button5 = Button(frame1, text="Add", command=add)
-    button5.place(relx=0.45, rely=0.9, relheight=0.05, relwidth=0.4)
-
+    button5.place(relx=0.05, rely=0.8, relheight=0.05, relwidth=0.9)
     window.mainloop()

@@ -7,18 +7,18 @@ import cv2 as cv
 from searchpage import *
 from mypage import *
 
-path = 'C:/Users/user/Documents/2021-2학기/데이터베이스관리2_가야나다라잔/팀프로젝트/final/PBL/src/'
+path = 'C:/Users/sea00/Desktop/3-2 semester/DataBase Management System2/PROJECT/Group1/PBL/2021-2-DBMS2/'
 window = Tk()
 
 window.title("Show")
 window.geometry("1280x720")
-window.resizable(False, False)
+window.resizable(True, True)
 
 frameBlack = Frame(window, bg='black')
 frameBlack.pack(fill=BOTH, expand=1)
 
 frame = Frame(frameBlack, bg='black')
-frame.place(relx=.5, rely=.5, anchor=CENTER)
+frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 searchBtn = Button(frame,bg='black')
 ii1 = PIL.Image.open(path+'img1.png')
@@ -46,7 +46,7 @@ Label(frame, text='Exit',bg='black', fg='white').grid(row=1, column=2)
 
 
 frm = Frame(window, width=1280, height=720)
-frm.place(relx=.5, rely=.5, anchor=CENTER)
+frm.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 
 lbl1 = Label(frm)

@@ -13,7 +13,7 @@ def connect():
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            passwd='Jewelmysql',
+            passwd='0415',
             database='teamproject')
         return mydb
         
