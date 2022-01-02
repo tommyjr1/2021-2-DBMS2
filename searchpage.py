@@ -6,6 +6,7 @@ import tkinter.font as font
 from tkinter import ttk
 from tkinter import messagebox
 from connect import *
+from textwrap import *
 
 # Loading Search
 def view():
@@ -16,10 +17,10 @@ def view():
     window.geometry("1280x720")
 
     frame1 = Frame(window, bg="#60b8eb")
-    frame1.place(relx=0, rely=0, relwidth=0.24, relheight=1)
+    frame1.place(relx=0, rely=0, relwidth=0.2, relheight=1)
 
     frame2 = Frame(window)
-    frame2.place(relx=0.24, rely=0, relwidth=0.76, relheight=1)
+    frame2.place(relx=0.2, rely=0, relwidth=0.8, relheight=1)
 
     mid_frame2 = Frame(frame2)
     mid_frame2.pack(fill=BOTH, expand=1)
@@ -131,7 +132,7 @@ def view():
                     columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
 
                 if option.get() == "Cast":
-                    query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, ca.cast as Cast, m.release_year as Release_Year, c.country as Country, m.duration as Duration
+                    query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year, c.country as Country, m.duration as Duration
                                 FROM table_{i} m
                                 JOIN table_genre g on m.show_id = g.show_id
                                 JOIN table_director d on m.show_id = d.show_id
@@ -141,7 +142,7 @@ def view():
                     c.execute(query, ("%" + str(e.get()) + "%",))
                     result3 = c.fetchall()
                     result = result + result3
-                    columns=['Title', 'Genre', 'Director', 'Cast','Release Year', 'Duration', 'Country']
+                    columns=['Title', 'Genre', 'Director','Release Year', 'Duration', 'Country']
 
 
         else:
@@ -226,7 +227,7 @@ def view():
                 
 
             if option.get() == "Cast":
-                query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, ca.cast as Cast, m.release_year as Release_Year, c.country as Country, m.duration as Duration
+                query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year, c.country as Country, m.duration as Duration
                             FROM table_{option2.get()} m
                             JOIN table_genre g on m.show_id = g.show_id
                             JOIN table_director d on m.show_id = d.show_id
@@ -265,12 +266,13 @@ def view():
                 resultcountry = c.fetchall()
                 for i in resultcountry:
                     odlist.append(i[0])
-                columns=['Title', 'Genre', 'Director', 'Cast','Release Year', 'Duration', 'Country']
+                columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
                 
 
         if len(result)==0:
             messagebox.showinfo('', 'No show found.')
             return
+
         k = 1
         for cols in columns:
             res_label = Label(scrollable_frame, text=cols, bg="#000000", fg="#ffffff")
@@ -281,33 +283,110 @@ def view():
         global btns,show_ids
         btns={}
         show_ids=[]
+        genres = []
+        directors=[]
+        countries=[]
+        indexs=[]
+
+        before_res=result[0]
+        # each_gen=[result[0][2]]
+        # if result[0][2] not in oglist:
+        #             oglist.append(result[0][2])
+        # each_dir=[result[0][3]]
+        # each_con=[result[0][6]]
+        # if result[0][6] not in odlist:
+        #             oglist.append(result[0][6])
+        each_gen=[]
+        each_dir=[]
+        each_con=[]
+
         for res in result:
-            show_ids.append(res[0])
-        result_index=0
+            if (len(result)==1):
+                show_ids.append(res[0])
+                genres.append(res[2])
+                if res[2] not in oglist:
+                    oglist.append(res[2])
+                directors.append(res[3])
+                countries.append(res[6])
+                if res[6] not in odlist:
+                    odlist.append(res[6])
+                indexs.append(result.index(res))
+                break
+
+            elif(before_res[0]!=res[0]):
+                #이전꺼랑 지금꺼가 다름
+                #이전꺼 넣어줘야함
+                show_ids.append(before_res[0])
+                genres.append(each_gen)
+                directors.append(each_dir)
+                countries.append(each_con)
+                indexs.append(result.index(before_res))
+                each_gen=[]
+                each_con=[]
+                each_dir=[]
+
+            
+            if res[2] not in each_gen:
+                each_gen.append(res[2])
+            if res[2] not in oglist:
+                    oglist.append(res[2])
+            if res[3] not in each_dir:
+                each_dir.append(res[3])
+            if res[6] not in each_con:
+                each_con.append(res[6])
+            if res[6] not in odlist:
+                    odlist.append(res[6])
+            before_res = res
+            
+            #이게 제일 마지막꺼일때
+            if res==result[-1]:
+                show_ids.append(res[0])
+                genres.append(each_gen)
+                directors.append(each_dir)
+                countries.append(each_con)
+                indexs.append(result.index(res))
+                each_gen=[]
+                each_con=[]
+                each_dir=[]
+                
+        # for idx in indexs:
         for ind,d in enumerate(show_ids):
-            res_label2 = Button(scrollable_frame, text=result[result_index][1], bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=8, weight='bold')
+            txt = str(result[indexs[ind]][1])
+            txtcon = fill(txt, width=20)
+            res_label2 = Button(scrollable_frame, text=txtcon, bg="#000000", fg="white")
+            res_label2['font'] = font.Font(family="Roboto", size=1, weight='bold')
             res_label2.grid(row=ind+1, column=1, sticky=NSEW)
             res_label2.config(command=lambda e=ind: detail(e))
             btns[ind]=res_label2
-            result_index+=1
+            
+        for idx, ind in enumerate(indexs):
+            #장르
+            # for e_gen in genres:
+            txt = str(genres[idx])
+            txtcon = fill(txt, width=20)
+            res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
+            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2.grid(row=idx+1, column=2)
+            #디렉터
+            # for e_dir in directors:
+            txt = str(directors[idx])
+            txtcon = fill(txt, width=20)
+            res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
+            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2.grid(row=idx+1, column=3)
+            for j in range(4,6):
+                res_label2 = Label(scrollable_frame, text=result[ind][j], bg="#000000", fg="white")
+                res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+                res_label2.grid(row=idx+1, column=j)
+            #나라
+            # for e_con in countries:
+            txt = str(countries[idx])
+            txtcon = fill(txt, width=20)
+            res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
+            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2.grid(row=idx+1, column=6)
 
-        i = 1
-        for res in result:
-            for j in range(2,len(res)):
-                res_label2 = Label(scrollable_frame, text=res[j], bg="#000000", fg="white")
-                res_label2['font'] = font.Font(family="Roboto", size=8, weight='bold')
-                res_label2.grid(row=i, column=j, sticky=NSEW)
 
-                if option2.get() == "ALL":
-                    if j==2:
-                        # genre
-                        if(res[2] not in oglist):
-                            oglist.append(res[2])
-                    if j==3:
-                        if(res[6] not in odlist):
-                            odlist.append(res[6])
-            i = i + 1
         conn.close()
 
         od = OptionMenu(frame1, optionDirector, *odlist)

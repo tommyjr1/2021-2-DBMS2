@@ -21,7 +21,7 @@ def open_mypage():
     JOIN table_tv t ON t.show_id = c.show_id'''
 
     top = Toplevel()
-    top.geometry("700x500")
+    top.geometry("1280x720")
     top_frame = Frame(top, bg="#ffd129")
     top_frame.place(relx=0, rely=0, relwidth=1, relheight=0.3)
     label = Label(top_frame, text="My page")
