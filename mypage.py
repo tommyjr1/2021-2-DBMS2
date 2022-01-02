@@ -6,18 +6,20 @@ import tkinter.font as font
 from tkinter import ttk
 from tkinter import messagebox
 from connect import *
+
 from likes import *
 from comments import *
 
 # Loading Mypage
 def open_mypage():
     top = Toplevel()
-    top.geometry("1280x720")
+    top.geometry("1920x1080")
     top_frame = Frame(top, bg="#ffd129")
-    top_frame.place(relx=0, rely=0, relwidth=1, relheight=0.3)
-    label = Label(top_frame, text="My page")
-    label['font'] = font.Font(family="Arial", size=15)
+    top_frame.place(relx=0, rely=0, relwidth=1, relheight=0.2)
+    label = Label(top_frame, text="My page", fg='black', bg="#ffd129")
+    label['font'] = font.Font(family='NanumBarunGothic', size=18, weight='bold')
     label.place(relx=0.3, rely=0.3, relwidth=0.4)
+
     add_frame = Frame(top,bg="#ffd129" )
     add_frame.place(relx=0, rely=0.3, relwidth=0.05, relheight=0.7)
     freshBtn = Button(top_frame, text="새로고침")
@@ -26,8 +28,8 @@ def open_mypage():
 
 
     like = Frame(top, bg="#ffd129")
-    like.place(relx=0.05, rely=0.3, relwidth=0.35, relheight=0.7)
-    expandframe3 = Frame(like, bg="#60b8eb")
+    like.place(relx=0, rely=0.2, relwidth=0.5, relheight=0.8)
+    expandframe3 = Frame(like, bg="#ffd129")
     expandframe3.pack(fill=BOTH, expand=1)
 
     details3 = Canvas(expandframe3, bg="#ffd129")
@@ -44,7 +46,7 @@ def open_mypage():
 
 
     comment= Frame(top, bg="#ffd129")
-    comment.place(relx=0.4, rely=0.3, relwidth=0.6, relheight=0.7)
+    comment.place(relx=0.5, rely=0.2, relwidth=0.6, relheight=0.8)
     expandframe2 = Frame(comment, bg="#ffd129")
     expandframe2.pack(fill=BOTH, expand=1)
 
@@ -59,6 +61,7 @@ def open_mypage():
 
     comment_frame = Frame(details2, bg="#ffd129")
     details2.create_window((0, 0), window=comment_frame, anchor=NW)
+
 
     def destroy_display():
         for widget in like_frame.winfo_children():
@@ -94,35 +97,56 @@ def open_mypage():
         result2 = c.fetchall()
         conn.close()
 
-        col_label1 = Label(like_frame, text="LIKE", bg="#ffd129")
-        col_label1.grid(row=0, column=0)
-        # for i in range(len(result1)):
+
+        fontbold= font.Font(family='NanumBarunGothic', size=16, weight="bold")
+        fontnormal= font.Font(family='NanumBarunGothic', size=12)
+
+
+        col_label1 = Label(like_frame, text="Like", fg="black", bg="#ffd129")
+        col_label1.grid(row=1, column=1, ipadx=3, ipady=1)
+        col_label1.configure(font=fontbold)
+        blank = Label(like_frame, text="", bg="#ffd129",width=40)
+        blank.grid(column=0, row=0)
+        blank2 = Label(like_frame, text="", bg="#ffd129")
+        blank2.grid(column=1, row=2)
+
         show_ids_like=[]
         for res in result1:
             show_ids_like.append(res[0])
         for ind, res in enumerate(result1):
-            res_label1 = Button(like_frame, text=res[1], fg="white", bg="black")
-            res_label1.grid(row=result1.index(res) + 1, column=0)
+            res_label1 = Button(like_frame, text=res[1], fg="black", bg="#ffd129")
+            res_label1.grid(row=result1.index(res)+3, column=1,ipadx=3, ipady=1)
             res_label1.config(command=lambda e=ind:unlike(show_ids_like[e]))
+            res_label1.configure(font=fontnormal)
+
+
 
         #댓글
+
         columns = c.column_names
 
         show_ids_com=[]
         comments=[]
+        blank = Label(comment_frame, text="", bg="#ffd129",width=10)
+        blank.grid(column=0, row=0)
         for i in range(len(columns)):
-            res_label = Label(comment_frame, text=columns[i], bg="#ffd129")
-            res_label.grid(row=0, column=i)
+            res_label = Label(comment_frame, text=columns[i], fg='black', bg="#ffd129")
+            res_label.grid(row=1, column=i+1, ipadx=3, ipady=1)
+            res_label.configure(font=fontbold)
+            blank2 = Label(comment_frame, text="", bg="#ffd129")
+            blank2.grid(column=i+1, row=2)
+
         for j in range(len(result2)):
             for i in range(3):
-                res_label2 = Label(comment_frame, text=result2[j][i], fg="white", bg="#60b8eb")
-                res_label2.grid(row=j + 1, column=i)
+                res_label2 = Label(comment_frame, text=result2[j][i], fg="black", bg="#ffd129")
+                res_label2.grid(row=j + 3, column=i+1, ipadx=3, ipady=1)
+                res_label2.configure(font=fontnormal)   
             show_ids_com.append(result2[j][3])
             comments.append(result2[j][1])
         print(comments)
         for ind, com in enumerate(result2):
             deleteBtn = Button(comment_frame, text='Del')
-            deleteBtn.grid(row=ind+1, column=3)
+            deleteBtn.grid(row=ind+3, column=4)
             deleteBtn.config(command=lambda e=ind:delete_my(show_ids_com[e], comments[e]))
 
             

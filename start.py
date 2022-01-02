@@ -19,36 +19,35 @@ frameBlack.pack(fill=BOTH, expand=1)
 
 frame = Frame(frameBlack, bg='black')
 frame.place(relx=.5, rely=.5, anchor=CENTER)
-# tkinter를 사용하기 위한 import
-from tkinter import *
-from tkinter import ttk
 
-# tkinter 객체 생성
-window = Tk()
+searchBtn = Button(frame,bg='black')
+ii1 = PIL.Image.open(path+'img1.png')
+re1 = ii1.resize((150,150),PIL.Image.ANTIALIAS)
+img1 = ImageTk.PhotoImage(re1)
+searchBtn.config(image=img1,borderwidth=0, highlightthickness=0)
+searchBtn.grid(row=0, column=0,padx=60)
+Label(frame, text='Search',bg='black', fg='white').grid(row=1, column=0)
 
-# 사용자 id와 password를 저장하는 변수 생성
-user_id, password = StringVar(), StringVar()
+mypageBtn = Button(frame,bg='black')
+ii2 = PIL.Image.open(path+'img2.png')
+re2 = ii2.resize((150,150),PIL.Image.ANTIALIAS)
+img2 = ImageTk.PhotoImage(re2)
+mypageBtn.config(image=img2,borderwidth=0, highlightthickness=0)
+mypageBtn.grid(row=0, column=1,padx=60)
+Label(frame, text='My Page',bg='black', fg='white').grid(row=1, column=1)
 
-# 사용자 id와 password를 비교하는 함수
-def check_data():
-    if user_id.get() == "Passing" and password.get() == "Story":
-        print("Logged IN Successfully")
-    else:
-        print("Check your Usernam/Password")
-
-# id와 password, 그리고 확인 버튼의 UI를 만드는 부분
-ttk.Label(window, text = "Username : ").grid(row = 0, column = 0, padx = 10, pady = 10)
-ttk.Label(window, text = "Password : ").grid(row = 1, column = 0, padx = 10, pady = 10)
-ttk.Entry(window, textvariable = user_id).grid(row = 0, column = 1, padx = 10, pady = 10)
-ttk.Entry(window, textvariable = password).grid(row = 1, column = 1, padx = 10, pady = 10)
-ttk.Button(window, text = "Login", command = check_data).grid(row = 2, column = 1, padx = 10, pady = 10)
-
-window.mainloop()
+exitBtn = Button(frame,bg='black')
+ii3 = PIL.Image.open(path+'img3.png')
+re3 = ii3.resize((150,150),PIL.Image.ANTIALIAS)
+img3 = ImageTk.PhotoImage(re3)
+exitBtn.config(image=img3,borderwidth=0, highlightthickness=0)
+exitBtn.grid(row=0, column=2,padx=60)
+Label(frame, text='Exit',bg='black', fg='white').grid(row=1, column=2)
 
 
 
 frm = Frame(window, width=1280, height=720)
-frm.place(relx=.5, rely=.5, anchor=CENTER)
+frm.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 
 lbl1 = Label(frm)

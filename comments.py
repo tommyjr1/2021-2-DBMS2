@@ -22,8 +22,8 @@ def bringComment(show_id, commentgridframe):
     comments=[]
 
     for i in myResult:
-        Label(commentgridframe, text=i[0], bg="#60b8eb").grid(row=myResult.index(i), column=0 ,sticky=NSEW)
-        Label(commentgridframe, text=i[1], bg="#60b8eb").grid(row=myResult.index(i), column=1, padx=3, sticky=NSEW)
+        Label(commentgridframe, text=i[0], fg="white",bg="black").grid(row=myResult.index(i), column=0 ,sticky=NSEW)
+        Label(commentgridframe, text=i[1], fg="white",bg="black").grid(row=myResult.index(i), column=1, padx=3,ipady=4, sticky=NSEW)
         show_ids.append(i[2])
         comments.append(i[0])
     

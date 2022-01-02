@@ -135,19 +135,19 @@ def detail(index, show_ids):
     window_d.title('Show Detail')
     window_d.geometry('800x600')
     addframe = Frame(window_d, bg="black")
-    addframe.place(relwidth=0.3, relheight=0.1, relx=0.7, rely=0.9)
+    addframe.place(relwidth=0.4, relheight=0.1, relx=0.6, rely=0.9)
 
     movieframe = Frame(window_d, bg="#60b8eb")
-    movieframe.place(relwidth=.7, relheight=.9, relx=0, rely=0)
+    movieframe.place(relwidth=.6, relheight=.9, relx=0, rely=0)
 
     btnframe = Frame(window_d, bg="#60b8eb")
-    btnframe.place(relwidth=.7, relheight=.1, relx=0, rely=.9)
+    btnframe.place(relwidth=.6, relheight=.1, relx=0, rely=.9)
 
     addcomFrame = Frame(window_d, bg="#000000")
-    addcomFrame.place(relwidth=.3, relheight=.3, relx=.7, rely=0)
+    addcomFrame.place(relwidth=.4, relheight=.3, relx=.6, rely=0)
 
     commentframe = Frame(window_d, bg="#000000")
-    commentframe.place(relwidth=.3, relheight=.6, relx=0.7, rely=.3)
+    commentframe.place(relwidth=.4, relheight=.6, relx=0.6, rely=.3)
     commentgridframe = Frame(commentframe, bg="#000000")
     commentgridframe.place(relx=.5, rely=0, anchor=N)
 
@@ -168,9 +168,8 @@ def detail(index, show_ids):
 
     global result, columns
     result = getInfo()
-    columns = ["title", "date_added", "release_year", "rating", "duration", "description", "casts", "directors",
-                "countries", "genres"
-                ]
+    columns = ["Title", "Date_added", "Release_year", "Rating", "Duration", "Description", "Casts", "Directors",
+                 "Countries", "Genres"]
 
     def showresult(result):
         for i in infos.winfo_children():
@@ -182,7 +181,7 @@ def detail(index, show_ids):
     
     showresult(result)
     bringComment(show_id, commentgridframe)
-    likeBtn = Button(btnframe, text='Like')
+    likeBtn = Button(btnframe, text='Like', height=3,width=21)
     likeBtn.pack(side=LEFT, anchor=S)
 
     def remove():
@@ -231,18 +230,22 @@ def detail(index, show_ids):
         global window_e
         window_e = Tk()
         window_e.title('Edit show')
-        window_e.geometry('700x500')
+        window_e.geometry('650x500')
         frame = Frame(window_e,bg="black")
         frame.pack(side = LEFT, fill = BOTH, expand = 1)
 
         for i in columns:
-            Label(frame, text=i, fg="white",bg="black").grid(row=columns.index(i), column=0)
+            font2 = font.Font(family="NanumBarunGothic", weight="bold")
+            label1 = Label(frame, text=i, fg="white",bg="black")
+            label1.grid(row=columns.index(i), column=0)
+            label1.configure(font=font2)
+
             e = Entry(frame, width=70, bg="white")
             e.insert(END, str(result[columns.index(i)]))
             e.grid(row=columns.index(i), column=1, padx=3, pady=5, ipady=7)
 
         saveBtn = Button(frame, text='Save change')
-        saveBtn.grid(row=10, column=1, sticky='e', )
+        saveBtn.grid(row=11, column=1, pady=3, sticky='s')
 
         def editSave():
             for i in range(10):
@@ -316,11 +319,11 @@ def detail(index, show_ids):
     
     likeBtn.config(command=lambda :like(show_id, likeBtn))
 
-    editBtn = Button(btnframe, text='Edit')
+    editBtn = Button(btnframe, text='Edit', height=3, width=22)
     editBtn.pack(side=RIGHT, anchor=S)
     editBtn.config(command=edit)
 
-    removeBtn = Button(btnframe, text='Delete')
+    removeBtn = Button(btnframe, text='Delete', height=3, width=22)
     removeBtn.pack(side=RIGHT, anchor=S)
     removeBtn.config(command=remove)
 

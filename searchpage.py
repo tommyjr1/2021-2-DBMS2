@@ -13,7 +13,7 @@ def view():
     #### GUI ####
     window = Tk()
     window.title("Search shows")
-    window.geometry("1280x720")
+    window.geometry("1920x1080")
 
     frame1 = Frame(window, bg="#60b8eb")
     frame1.place(relx=0, rely=0, relwidth=0.2, relheight=1)
@@ -41,13 +41,13 @@ def view():
             widget.destroy()
 
     # choose show type
-    Label(frame1, text='Type', bg="#60b8eb").place(relx=0.05, rely=0.25, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Type', bg="#60b8eb").place(relx=0.05, rely=0.15, relheight=0.05, relwidth=0.2, anchor=NW)
     option2 = StringVar(frame1)
     option2.set("ALL")
     op2list = ["ALL", "movie", "tv"]
     o2 = OptionMenu(frame1, option2, *op2list)
     o2.config(fg="#000000",bg="#ffffff")
-    o2.place(relx=0.25, rely=0.25, relheight=0.05, relwidth=0.7, anchor=NW)
+    o2.place(relx=0.25, rely=0.15, relheight=0.05, relwidth=0.7, anchor=NW)
     
 
     # choose searching theme <title, director, cast>
@@ -56,14 +56,14 @@ def view():
     oplist = ["Title", "Director", "Cast"]
     o = OptionMenu(frame1, option,"Title", "Director", "Cast")
     o.config(fg="#000000",bg="#ffffff")
-    o.place(relx=0.25, rely=0.35, relheight=0.05, relwidth=0.7, anchor=NW)
-    Label(frame1, text=option.get(), bg="#60b8eb").place(relx=0.05, rely=0.35, relheight=0.05, relwidth=0.2, anchor=NW)
+    o.place(relx=0.25, rely=0.25, relheight=0.05, relwidth=0.7, anchor=NW)
+    Label(frame1, text=option.get(), bg="#60b8eb").place(relx=0.05, rely=0.25, relheight=0.05, relwidth=0.2, anchor=NW)
 
 
 
-    Label(frame1, text='Keyword', bg="#60b8eb").place(relx=0.05, rely=0.45, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Keyword', bg="#60b8eb").place(relx=0.05, rely=0.35, relheight=0.05, relwidth=0.2, anchor=NW)
     e = Entry(frame1, fg='black', bg='white')
-    e.place(relx=0.25, rely=0.45, relheight=0.05, relwidth=0.7, anchor=NW)
+    e.place(relx=0.25, rely=0.35, relheight=0.05, relwidth=0.7, anchor=NW)
     
     global optionGenre, optionDirector
 
@@ -78,15 +78,15 @@ def view():
     odlist=['ALL']
 
     global od, og
-    Label(frame1, text='Country', bg="#60b8eb").place(relx=0.05, rely=0.65, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Country', bg="#60b8eb").place(relx=0.05, rely=0.6, relheight=0.05, relwidth=0.2, anchor=NW)
     od = OptionMenu(frame1, optionDirector, *odlist)
     od.config(foreground="black",background="white")
-    od.place(relx=0.25, rely=0.65, relheight=0.05, relwidth=0.7, anchor=NW)
+    od.place(relx=0.25, rely=0.6, relheight=0.05, relwidth=0.7, anchor=NW)
 
-    Label(frame1, text='Genre', bg="#60b8eb").place(relx=0.05, rely=0.75, relheight=0.05, relwidth=0.2, anchor=NW)
+    Label(frame1, text='Genre', bg="#60b8eb").place(relx=0.05, rely=0.7, relheight=0.05, relwidth=0.2, anchor=NW)
     og = OptionMenu(frame1, optionGenre, *oglist)
     og.config(foreground="black",background="white")
-    og.place(relx=0.25, rely=0.75, relheight=0.05, relwidth=0.7, anchor=NW)
+    og.place(relx=0.25, rely=0.7, relheight=0.05, relwidth=0.7, anchor=NW)
 
     def search():
         close_display()
@@ -131,7 +131,7 @@ def view():
                     columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
 
                 if option.get() == "Cast":
-                    query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year, c.country as Country, m.duration as Duration
+                    query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year,  m.duration as Duration,c.country as Country
                                 FROM table_{i} m
                                 JOIN table_genre g on m.show_id = g.show_id
                                 JOIN table_director d on m.show_id = d.show_id
@@ -166,8 +166,13 @@ def view():
                 '''
                 c.execute(genrequery)
                 resultgenre = c.fetchall()
-                for i in resultgenre:
-                    oglist.append(i[0])
+                for i in list(resultgenre):
+                    i = str(i)
+                    i = i[2:-3]
+                    if (i.startswith(" ")):
+                        i=i[1:]
+                    if i not in oglist:
+                        oglist.append(i)
 
                 countryquery = f'''
                 SELECT c.country as Country
@@ -180,8 +185,13 @@ def view():
                 '''
                 c.execute(countryquery)
                 resultcountry = c.fetchall()
-                for i in resultcountry:
-                    odlist.append(i[0])
+                for i in list(resultcountry):
+                    i = str(i)
+                    i = i[2:-3]
+                    if (i.startswith(' ')):
+                        i=i[1:]
+                    if i not in odlist:
+                        odlist.append(i)    
                 columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
                 
 
@@ -206,8 +216,13 @@ def view():
                 '''
                 c.execute(genrequery)
                 resultgenre = c.fetchall()
-                for i in resultgenre:
-                    oglist.append(i[0])
+                for i in list(resultgenre):
+                    i = str(i)
+                    i = i[2:-3]
+                    if (i.startswith(' ')):
+                        i=i[1:]
+                    if i not in oglist:
+                        oglist.append(i)
 
                 countryquery = f'''
                 SELECT c.country as Country
@@ -220,13 +235,18 @@ def view():
                 '''
                 c.execute(countryquery)
                 resultcountry = c.fetchall()
-                for i in resultcountry:
-                    odlist.append(i[0])
+                for i in list(resultcountry):
+                    i = str(i)
+                    i = i[2:-3]
+                    if (i.startswith(' ')):
+                        i=i[1:]
+                    if i not in odlist:
+                        odlist.append(i) 
                 columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
                 
 
             if option.get() == "Cast":
-                query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year, c.country as Country, m.duration as Duration
+                query = f'''SELECT  m.show_id, m.title as Title, g.genre as Genre, d.director as Director, m.release_year as Release_Year, m.duration as Duration,c.country as Country
                             FROM table_{option2.get()} m
                             JOIN table_genre g on m.show_id = g.show_id
                             JOIN table_director d on m.show_id = d.show_id
@@ -248,8 +268,13 @@ def view():
                 '''
                 c.execute(genrequery)
                 resultgenre = c.fetchall()
-                for i in resultgenre:
-                    oglist.append(i[0])
+                for i in list(resultgenre):
+                    i=str(i)
+                    i=i[2:-3]
+                    if (i.startswith(' ')):
+                        i=i[1:]
+                    if i not in oglist:
+                        oglist.append(i)
 
                 countryquery = f'''
                 SELECT c.country as Country
@@ -263,8 +288,13 @@ def view():
                 '''
                 c.execute(countryquery)
                 resultcountry = c.fetchall()
-                for i in resultcountry:
-                    odlist.append(i[0])
+                for i in list(resultcountry):
+                    i = str(i)
+                    i=i[2:-3]
+                    if (i.startswith(' ')):
+                        i=i[1:]
+                    if i not in odlist:
+                        odlist.append(i) 
                 columns=['Title', 'Genre', 'Director', 'Release Year', 'Duration', 'Country']
                 
 
@@ -275,7 +305,7 @@ def view():
         k = 1
         for cols in columns:
             res_label = Label(scrollable_frame, text=cols, bg="#000000", fg="#ffffff")
-            res_label['font'] = font.Font(family="Roboto", size=10, weight='bold')
+            res_label['font'] = font.Font(family="NanumBarunGothic", size=10, weight='bold')
             res_label.grid(row=0, column=k)
             k = k + 1
 
@@ -297,12 +327,18 @@ def view():
             if (len(result)==1):
                 show_ids.append(res[0])
                 genres.append(res[2])
-                if res[2] not in oglist:
-                    oglist.append(res[2])
+                i=res[2]
+                if (i.startswith(' ')):
+                        i=i[1:]
+                if i not in oglist:
+                    oglist.append(i)
                 directors.append(res[3])
                 countries.append(res[6])
-                if res[6] not in odlist:
-                    odlist.append(res[6])
+                g=res[6]
+                if (g.startswith(' ')):
+                        g=g[1:]
+                if g not in odlist:
+                    odlist.append(g)
                 indexs.append(result.index(res))
                 break
 
@@ -321,14 +357,20 @@ def view():
             
             if res[2] not in each_gen:
                 each_gen.append(res[2])
-            if res[2] not in oglist:
-                    oglist.append(res[2])
+            i=res[2]
+            if (i.startswith(' ')):
+                    i=i[1:]
+            if i not in oglist:
+                oglist.append(i)
             if res[3] not in each_dir:
                 each_dir.append(res[3])
             if res[6] not in each_con:
                 each_con.append(res[6])
-            if res[6] not in odlist:
-                    odlist.append(res[6])
+            g=res[6]
+            if (g.startswith(' ')):
+                    g=g[1:]
+            if g not in odlist:
+                odlist.append(g)
             before_res = res
             
             #이게 제일 마지막꺼일때
@@ -347,7 +389,7 @@ def view():
             txt = str(result[indexs[ind]][1])
             txtcon = fill(txt, width=20)
             res_label2 = Button(scrollable_frame, text=txtcon, bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=1, weight='bold')
+            res_label2['font'] = font.Font(family="NanumBarunGothic", size=1, weight='bold')
             res_label2.grid(row=ind+1, column=1, sticky=NSEW)
             res_label2.config(command=lambda e=ind: detail(e, show_ids))
             btns[ind]=res_label2
@@ -362,7 +404,7 @@ def view():
                 txtcon = fill(txt, width=20)
 
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2['font'] = font.Font(family="NanumBarunGothic", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=2)
             #디렉터
             # for e_dir in directors:
@@ -372,12 +414,12 @@ def view():
             else:
                 txtcon = fill(txt, width=20)
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2['font'] = font.Font(family="NanumBarunGothic", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=3)
 
             for j in range(4,6):
                 res_label2 = Label(scrollable_frame, text=result[ind][j], bg="#000000", fg="white")
-                res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+                res_label2['font'] = font.Font(family="NanumBarunGothic", size=2, weight='bold')
                 res_label2.grid(row=idx+1, column=j)
             #나라
             # for e_con in countries:
@@ -387,7 +429,7 @@ def view():
             else:
                 txtcon = fill(txt, width=20)
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
-            res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
+            res_label2['font'] = font.Font(family="NanumBarunGothic", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=6)
 
 
@@ -395,11 +437,11 @@ def view():
 
         od = OptionMenu(frame1, optionDirector, *odlist)
         od.config(fg="#000000",bg="#ffffff")
-        od.place(relx=0.25, rely=0.65, relheight=0.05, relwidth=0.7, anchor=NW)
+        od.place(relx=0.25, rely=0.6, relheight=0.05, relwidth=0.7, anchor=NW)
 
         og = OptionMenu(frame1, optionGenre, *oglist)
         og.config(fg="#000000",bg="#ffffff")
-        og.place(relx=0.25, rely=0.75, relheight=0.05, relwidth=0.7, anchor=NW)
+        og.place(relx=0.25, rely=0.7, relheight=0.05, relwidth=0.7, anchor=NW)
         pass
 
     def reset():
@@ -411,26 +453,29 @@ def view():
 
     button1 = Button(frame1, text="Search", command=search)
     button1.config( bg='white', fg='black')
-    button1.place(relx=0.05, rely=0.53, relheight=0.07, relwidth=0.4)
+    button1.place(relx=0.05, rely=0.45, relheight=0.07, relwidth=0.4)
 
     button2 = Button(frame1, text="Reset", command=reset)
     button2.config( bg='white', fg='black')
-    button2.place(relx=0.55, rely=0.53, relheight=0.07, relwidth=0.4)
+    button2.place(relx=0.55, rely=0.45, relheight=0.07, relwidth=0.4)
 
     def add():
         global window_a
-        columns = ["title", "date_added", "release_year", "rating", "duration", "description", "casts", "directors",
-                   "countries", "genres"
+        columns = ["Title", "Date_added", "Release_year", "Rating", "Duration", "Description", "Casts", "Directors",
+                   "Countries", "Genres"
                    ]
         window_a = Tk()
         window_a.title('Add show')
-        window_a.geometry('700x500')
+        window_a.geometry('650x500')
+        
 
         frame = Frame(window_a, bg="black")
         frame.pack(side = LEFT, fill = BOTH, expand = 1)
+        font2=font.Font(family="NanumBarunGothic",weight="bold")
 
         tableNm = Label(frame, text='Type', fg="white", bg="black")
         tableNm.grid(row=0, column=0)
+        tableNm.configure(font=font2)
 
         option = StringVar(frame)
         option.set("Type")
@@ -438,17 +483,20 @@ def view():
         o3.grid(row=0, column=1)
 
         for i in columns:
-            Label(frame, text=i,fg="white", bg="black").grid(row=columns.index(i) + 1, column=0)
+            font2=font.Font(family="NanumBarunGothic",weight="bold")
+            label2 = Label(frame, text=i,fg="white", bg="black")
+            label2.grid(row=columns.index(i) + 1, column=0)
+            label2.configure(font=font2)
             e = Entry(frame, width=70)
             if (columns.index(i) > 5):
                 e.insert(END, "['']")
             else:
                 e.insert(END, '')
-
             e.grid(row=columns.index(i) + 1, column=1, padx=3, pady=5, ipady=7)
 
-        saveBtn = Button(frame, text='Save')
-        saveBtn.grid(row=11, column=1, sticky='e', )
+        saveBtn = Button(frame, text='Save',width=10)
+        saveBtn.grid(row=11, column=1)
+
 
         def editSave():
             if option.get() == 'Type':
@@ -539,6 +587,5 @@ def view():
         window_a.mainloop()
 
     button5 = Button(frame1, text="Add", command=add)
-    button5.place(relx=0.45, rely=0.9, relheight=0.05, relwidth=0.4)
-
+    button5.place(relx=0.05, rely=0.8, relheight=0.05, relwidth=0.9)
     window.mainloop()
