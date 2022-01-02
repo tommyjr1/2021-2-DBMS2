@@ -1,5 +1,3 @@
-from sys import exit
-import mysql.connector
 from tkinter import *
 from tkinter import Scrollbar
 import tkinter.font as font
@@ -7,6 +5,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from connect import *
 from textwrap import *
+from detailpage import *
 
 # Loading Search
 def view():
@@ -289,13 +288,7 @@ def view():
         indexs=[]
 
         before_res=result[0]
-        # each_gen=[result[0][2]]
-        # if result[0][2] not in oglist:
-        #             oglist.append(result[0][2])
-        # each_dir=[result[0][3]]
-        # each_con=[result[0][6]]
-        # if result[0][6] not in odlist:
-        #             oglist.append(result[0][6])
+
         each_gen=[]
         each_dir=[]
         each_con=[]
@@ -356,24 +349,32 @@ def view():
             res_label2 = Button(scrollable_frame, text=txtcon, bg="#000000", fg="white")
             res_label2['font'] = font.Font(family="Roboto", size=1, weight='bold')
             res_label2.grid(row=ind+1, column=1, sticky=NSEW)
-            res_label2.config(command=lambda e=ind: detail(e))
+            res_label2.config(command=lambda e=ind: detail(e, show_ids))
             btns[ind]=res_label2
             
         for idx, ind in enumerate(indexs):
             #장르
             # for e_gen in genres:
             txt = str(genres[idx])
-            txtcon = fill(txt, width=20)
+            if txt.startswith('['):
+                txtcon = fill(txt[1:-1], width=20)
+            else:
+                txtcon = fill(txt, width=20)
+
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
             res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=2)
             #디렉터
             # for e_dir in directors:
             txt = str(directors[idx])
-            txtcon = fill(txt, width=20)
+            if txt.startswith('['):
+                txtcon = fill(txt[1:-1], width=20)
+            else:
+                txtcon = fill(txt, width=20)
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
             res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=3)
+
             for j in range(4,6):
                 res_label2 = Label(scrollable_frame, text=result[ind][j], bg="#000000", fg="white")
                 res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
@@ -381,7 +382,10 @@ def view():
             #나라
             # for e_con in countries:
             txt = str(countries[idx])
-            txtcon = fill(txt, width=20)
+            if txt.startswith('['):
+                txtcon = fill(txt[1:-1], width=20)
+            else:
+                txtcon = fill(txt, width=20)
             res_label2 = Label(scrollable_frame, text=txtcon, bg="#000000", fg="white")
             res_label2['font'] = font.Font(family="Roboto", size=2, weight='bold')
             res_label2.grid(row=idx+1, column=6)
@@ -412,419 +416,6 @@ def view():
     button2 = Button(frame1, text="Reset", command=reset)
     button2.config( bg='white', fg='black')
     button2.place(relx=0.55, rely=0.53, relheight=0.07, relwidth=0.4)
-
-    ### detail page ###
-
-    def detail(index):
-        global show_id
-        show_id=show_ids[index]
-
-        def getInfo():
-            mydb = connect()
-            myCursor = mydb.cursor()
-
-            # Bring info
-            global table, show_type
-            table = ''
-            show_type = ''
-            try:
-                sqlString = f""" 
-                SELECT *
-                FROM table_movie
-                WHERE show_id='{show_id}';
-                """
-
-                myCursor.execute(sqlString)
-                myResultList = myCursor.fetchall()
-                myResult = myResultList[0]
-
-                table = 'table_movie'
-                show_type = 'Movie'
-            except:
-                sqlString = f""" 
-                SELECT *
-                FROM table_tv
-                WHERE show_id='{show_id}';
-                """
-
-                myCursor.execute(sqlString)
-                myResultList = myCursor.fetchall()
-                myResult = myResultList[0]
-
-                table = 'table_tv'
-                show_type = 'TV Show'
-
-            try:
-                title = myResult[2]
-                date_added = myResult[3]
-                release_year = myResult[4]
-                rating = myResult[5]
-                duration = myResult[6]
-                description = myResult[7]
-            except:
-                print('Missing')
-
-            # Bring all casts
-            sqlString = f""" 
-            SELECT cast
-            FROM table_cast
-            WHERE show_id='{show_id}';
-            """
-            myCursor.execute(sqlString)
-            myResultCast = myCursor.fetchall()
-
-            casts = []
-            if (len(myResultCast) != 0):
-
-                for cast in myResultCast:
-                    casts.append(cast[0])
-            else:
-                casts.append('No information updated')
-
-            # Bring all directors
-            sqlString = f""" 
-            SELECT director
-            FROM table_director
-            WHERE show_id='{show_id}';
-            """
-            myCursor.execute(sqlString)
-            myResultDi = myCursor.fetchall()
-
-            directors = []
-            if (len(myResultDi) != 0):
-
-                for di in myResultDi:
-                    directors.append(di[0])
-            else:
-                directors.append('No information updated')
-
-            # Bring all country
-            sqlString = f""" 
-            SELECT country
-            FROM table_country
-            WHERE show_id='{show_id}';
-            """
-            myCursor.execute(sqlString)
-            myResultCountry = myCursor.fetchall()
-
-            countries = []
-            if (len(myResultCountry) != 0):
-
-                for c in myResultCountry:
-                    countries.append(c[0])
-            else:
-                countries.append('No information updated')
-
-            # Bring all genre
-            sqlString = f""" 
-            SELECT genre
-            FROM table_genre
-            WHERE show_id='{show_id}';
-            """
-            myCursor.execute(sqlString)
-            myResultGenre = myCursor.fetchall()
-
-            genres = []
-            if (len(myResultGenre) != 0):
-
-                for c in myResultGenre:
-                    genres.append(c[0])
-            else:
-                genres.append('No information updated')
-
-            mydb.close()
-
-            return title, date_added, release_year, rating, duration, description, casts, directors, countries, genres
-
-        global window_d
-        window_d = Tk()
-        window_d.title('Show Detail')
-        window_d.geometry('800x600')
-        addframe = Frame(window_d, bg="black")
-        addframe.place(relwidth=0.3, relheight=0.1, relx=0.7, rely=0.9)
-
-        movieframe = Frame(window_d, bg="#60b8eb")
-        movieframe.place(relwidth=.7, relheight=.9, relx=0, rely=0)
-
-        btnframe = Frame(window_d, bg="#60b8eb")
-        btnframe.place(relwidth=.7, relheight=.1, relx=0, rely=.9)
-
-        addcomFrame = Frame(window_d, bg="#000000")
-        addcomFrame.place(relwidth=.3, relheight=.3, relx=.7, rely=0)
-
-        commentframe = Frame(window_d, bg="#000000")
-        commentframe.place(relwidth=.3, relheight=.6, relx=0.7, rely=.3)
-        commentgridframe = Frame(commentframe, bg="#000000")
-        commentgridframe.place(relx=.5, rely=0, anchor=N)
-
-        expandframe = Frame(movieframe, bg="#60b8eb")
-        expandframe.pack(fill=BOTH, expand=1)
-
-        details = Canvas(expandframe, bg="#60b8eb")
-        details.pack(side=LEFT, fill=BOTH, expand=1)
-
-        scrollbar = ttk.Scrollbar(expandframe, command=details.yview)
-        scrollbar.pack(side=RIGHT, fill=Y)
-
-        details.configure(yscrollcommand=scrollbar.set)
-        details.bind('<Configure>', lambda e: details.configure(scrollregion=details.bbox("all")))
-
-        infos = Frame(details, bg="#60b8eb")
-        details.create_window((0, 0), window=infos, anchor=NW)
-
-        global result, columns
-        result = getInfo()
-        columns = ["title", "date_added", "release_year", "rating", "duration", "description", "casts", "directors",
-                   "countries", "genres"
-                   ]
-
-        def showresult(result):
-            for i in infos.winfo_children():
-                i.destroy()
-            for i in columns:
-                Label(infos, text=i, bg="#60b8eb").grid(row=columns.index(i), column=0)
-                Label(infos, text=str(result[columns.index(i)]), bg="#60b8eb",wraplength=300).grid(row=columns.index(i), column=1,padx=3,pady=3, ipady=10)
-
-        def bringComment():
-            mydb = connect()
-
-            myCursor = mydb.cursor()
-
-            sqlString = f""" 
-            SELECT `comment`, `date`
-            FROM table_comment
-            WHERE show_id='{show_id}'
-            ORDER BY `date`;
-            """
-            myCursor.execute(sqlString)
-            myResult = myCursor.fetchall()
-
-            mydb.close()
-
-            for i in myResult:
-                Label(commentgridframe, text=i[0], bg="#60b8eb").grid(row=myResult.index(i), column=0 )
-                Label(commentgridframe, text=i[1], bg="#60b8eb").grid(row=myResult.index(i), column=1, padx=3, pady=3, ipady=4)
-
-        showresult(result)
-        bringComment()
-        likeBtn = Button(btnframe, text='Like')
-        likeBtn.pack(side=LEFT, anchor=S)
-
-        def remove():
-            global window_r
-            window_r = Tk()
-            window_r.title('Delete show')
-            window_r.geometry('300x200')
-
-            frame = Frame(window_r, bg="black")
-            frame.pack(side = LEFT, fill = BOTH, expand = 1)
-
-            label = Label(frame, text='Do you want to really delete this movie?',fg="white",bg="black",anchor=CENTER)
-            label.grid(row=0, column=0, columnspan=2)
-            yesBtn = Button(frame, text='Yes', bg="#60b8eb")
-            yesBtn.grid(row=1, column=0)
-            noBtn = Button(frame, text='No', bg="#60b8eb")
-            noBtn.grid(row=1, column=1)
-
-            def yes():
-                mydb = connect()
-                myCursor = mydb.cursor()
-                tables = [table, 'table_cast', 'table_director', 'table_country', 'table_genre', 'table_comment', 'table_comment', 'table_like']
-
-                for i in tables:
-                    sqlString = f""" 
-                    DELETE FROM {i}
-                    WHERE show_id='{show_id}';
-                    """
-                    myCursor.execute(sqlString)
-                    mydb.commit()
-                mydb.close()
-
-                messagebox.showinfo("", "Show deleted!")
-                window_r.destroy()
-                window_d.destroy()
-
-            def no():
-                window_r.destroy()
-
-            yesBtn.config(command=yes)
-            noBtn.config(command=no)
-
-            window_r.mainloop()
-
-        def edit():
-            global window_e
-            window_e = Tk()
-            window_e.title('Edit show')
-            window_e.geometry('700x500')
-            frame = Frame(window_e,bg="black")
-            frame.pack(side = LEFT, fill = BOTH, expand = 1)
-
-            for i in columns:
-                Label(frame, text=i, fg="white",bg="black").grid(row=columns.index(i), column=0)
-                e = Entry(frame, width=70, bg="white")
-                e.insert(END, str(result[columns.index(i)]))
-                e.grid(row=columns.index(i), column=1, padx=3, pady=5, ipady=7)
-
-            saveBtn = Button(frame, text='Save change')
-            saveBtn.grid(row=10, column=1, sticky='e', )
-
-            def editSave():
-                if option.get() == 'Type':
-                    messagebox.showinfo("Error",'Choose the type of the show.')
-                    return
-                else:
-                    for i in range(10):
-                        if frame.winfo_children()[2*i +3 ].get()=="" or frame.winfo_children()[2*i +3 ].get()=="['']":
-                            messagebox.showinfo("Error",'Write the '+frame.winfo_children()[2*(i+1)]["text"] +' of the show.')
-                            return
-                mydb = connect()
-                myCursor = mydb.cursor()
-                tables = [table, 'table_cast', 'table_director', 'table_country', 'table_genre']
-
-                for i in tables:
-                    sqlString = f""" 
-                    DELETE FROM {i}
-                    WHERE show_id='{show_id}';
-                    """
-                    myCursor.execute(sqlString)
-                    mydb.commit()
-
-                entrylist = []
-                for i in range(10):
-                    entrylist.append(frame.winfo_children()[2 * i + 1].get())
-                    if i == 6:
-                        # cast
-                        string = entrylist[i][1:-1]
-                        listt = string.split(',')
-
-                        for cast in listt:
-                            myCursor.execute(f"INSERT INTO table_cast(show_id, cast) VALUES('{show_id}',{cast})")
-                            mydb.commit()
-                    if i == 7:
-                        string = entrylist[i][1:-1]
-                        listt = string.split(',')
-
-                        for director in listt:
-                            myCursor.execute(
-                                f"INSERT INTO table_director(show_id, director) VALUES('{show_id}',{director})")
-                            mydb.commit()
-                    if i == 8:
-                        string = entrylist[i][1:-1]
-                        listt = string.split(',')
-
-                        for country in listt:
-                            myCursor.execute(
-                                f"INSERT INTO table_country(show_id, country) VALUES('{show_id}',{country})")
-                            mydb.commit()
-                    if i == 9:
-                        string = entrylist[i][1:-1]
-                        listt = string.split(',')
-
-                        for genre in listt:
-                            myCursor.execute(f"INSERT INTO table_genre(show_id, genre) VALUES('{show_id}',{genre})")
-                            mydb.commit()
-                    if i == 5:
-                        sqlString = f'INSERT INTO {table}(show_id, type, title, date_added, release_year, rating, duration, description) VALUES("{show_id}","{option.get()}","{entrylist[0]}","{entrylist[1]}","{entrylist[2]}","{entrylist[3]}","{entrylist[4]}","{entrylist[5]}")'
-
-                        myCursor.execute(sqlString)
-                        mydb.commit()
-                mydb.close()
-                messagebox.showinfo("", "Show edited!")
-                window_e.destroy()
-                global result
-                result = getInfo()
-                showresult(result)
-
-            saveBtn.config(command=editSave)
-
-            window_e.mainloop()
-
-        def like():
-            mydb = connect()
-            myCursor = mydb.cursor()
-            try:
-                sqlString = f""" 
-                INSERT INTO table_like(show_id,`like`) VALUES ('{show_id}',1);
-                """
-                myCursor.execute(sqlString)
-                mydb.commit()
-            except:
-                sqlString = f""" 
-                DELETE from table_like
-                WHERE show_id='{show_id}';
-                """
-                myCursor.execute(sqlString)
-                mydb.commit()
-            mydb.close()
-            getlike()
-
-        def getlike():
-            mydb = connect()
-            myCursor = mydb.cursor()
-            sqlString = f""" 
-            SELECT `like`
-            FROM table_like
-            WHERE show_id = '{show_id}';
-            """
-
-            myCursor.execute(sqlString)
-            status = myCursor.fetchall()
-            print(status)
-            try:
-                if status[0][0] == 1:
-                    likeBtn.config(bg='#ff0000')
-                else:
-                    likeBtn.config(bg='#ffffff')
-            except:
-                likeBtn.config(bg='#ffffff')
-            mydb.close()
-
-        getlike()
-        likeBtn.config(command=like)
-
-        editBtn = Button(btnframe, text='Edit')
-        editBtn.pack(side=RIGHT, anchor=S)
-        editBtn.config(command=edit)
-
-        removeBtn = Button(btnframe, text='Delete')
-        removeBtn.pack(side=RIGHT, anchor=S)
-        removeBtn.config(command=remove)
-
-        def addComment():
-            if entry.get() =="":
-                messagebox.showinfo("Error",'Write comment.')
-                return
-            mydb = connect()
-            myCursor = mydb.cursor()
-            try:
-                sqlString = f""" 
-                INSERT INTO table_comment(show_id,`comment`, `date`) VALUES ('{show_id}',"{entry.get()}", NOW());
-                """
-
-                myCursor.execute(sqlString)
-                mydb.commit()
-                mydb.close()
-                for i in commentgridframe.winfo_children():
-                    i.destroy()
-
-                bringComment()
-                entry.delete(0,END)
-                entry.insert(0, '')
-            except:
-                messagebox.showwarning('Error', 'Write shorter comment.')
-                mydb.close()
-
-            
-
-        entry = Entry(addcomFrame)
-        entry.place(relx=0.1, rely=0.25, relwidth=.8, relheight=.25)
-
-        addBtn = Button(addcomFrame, text='Comment')
-        addBtn.place(relx=.5, rely=.7, relwidth=.4)
-        addBtn.config(command=addComment)
-        window_d.mainloop()
-
 
     def add():
         global window_a
